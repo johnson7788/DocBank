@@ -2,7 +2,8 @@
 
 ## Introduction
 
-The models trained in our baseline are listed below. All models were trained 1 epochs under their respective backbones using the pretrained models provided by [Transformers](https://github.com/huggingface/transformers#model-architectures) and [LayoutLM](https://github.com/microsoft/unilm/tree/master/layoutlm#pre-trained-model).
+下面列出了在我们的基准中训练的模型. 
+所有模型都使用各自的backbones的预训练模型训练了1个epoch [Transformers](https://github.com/huggingface/transformers#model-architectures) and [LayoutLM](https://github.com/microsoft/unilm/tree/master/layoutlm#pre-trained-model).
 
 
 ## License
@@ -10,8 +11,7 @@ The models trained in our baseline are listed below. All models were trained 1 e
 All models available for download through this document are licensed under the [Attribution-NonCommercial-NoDerivs License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 ## Models
-
-The models trained on DocBank are available in the format used by Pytorch. 
+在DocBank上训练的模型以Pytorch使用的格式提供。
 
 <!-- |   |   name   |    backbone    |    url   |  size |
 |---|:--------:|:--------------:|:--------:|:-----:|

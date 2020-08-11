@@ -1,22 +1,27 @@
 # DocBank
 
+# 好像没有训练模型的结构
+
 **\*\*\*\*\* DocBank is a natural extension of the TableBank ([repo](https://github.com/doc-analysis/TableBank), [paper](https://arxiv.org/abs/1903.01949)) dataset \*\*\*\*\***
 
 **\*\*\*\*\* LayoutLM ([repo](https://github.com/microsoft/unilm/tree/master/layoutlm), [paper](https://arxiv.org/abs/1912.13318)) is an effective pre-training method of text and layout and archives the SOTA result on DocBank \*\*\*\*\***
 
-
-DocBank is a new large-scale dataset that is constructed using a weak supervision approach. It enables models to integrate both the textual and layout information for downstream tasks. The current DocBank dataset totally includes 500K document pages, where 400K for training, 50K for validation and 50K for testing.
+DocBank是使用弱监督方法构建的新的大规模数据集。 它使模型能够集成文本和布局信息以用于下游任务。 
+当前的DocBank数据集总共包括500K文档页面，其中400K用于训练，50K用于验证，50K用于测试。
 
 
 
 ## Introduction
+对于文档布局分析任务，已经有一些基于图像的文档布局数据集，而其中大多数是为计算机视觉方法构建的，
+很难应用于NLP方法。另外，基于图像的数据集主要包括页面图像和大型语义结构的边界框，
+它们不是细粒度的token级注释。此外，产生人工标记和细粒度的令牌级文本块排列也是费时且费力的。
+因此，至关重要的是要利用薄弱的监督来以最小的努力获得带标签的细粒度文档，同时使数据易于应用于任何NLP和计算机视觉方法。
 
-For document layout analysis tasks, there have been some image-based document layout datasets, while most of them are built for computer vision approaches and they are difficult to apply to NLP methods. In addition, image-based datasets mainly include the page images and the bounding boxes of large semantic structures, which are not fine-grained token-level annotations. Moreover, it is also time-consuming and labor-intensive to produce human-labeled and fine-grained token-level text block arrangement. Therefore, it is vital to leverage weak supervision to obtain fine-grained labeled documents with minimum efforts, meanwhile making the data be easily applied to any NLP and computer vision approaches. 
-
-To this end, we build the DocBank dataset, a  document-level  benchmark with fine-grained token-level annotations for layout  analysis. Distinct from the conventional human-labeled datasets, our approach obtains high quality annotations in a simple yet effective way with weak supervision.
+为此，我们构建了DocBank数据集，这是一个文档级基准，具有用于布局分析的细粒度token级注释。
+与常规的人类标记数据集不同，我们的方法以简单而有效的方式在弱监督下获得了高质量注释。
 
 ## Statistics of DocBank
-The DocBank dataset consists of 500K document pages with 12 types of semantic units.
+DocBank数据集由具有12种类型的语义单元的500K文档页面组成。
 
 ### Semantic Structure Statistics of DocBank
 | Split | Abstract | Author | Caption |  Date | Equation | Figure | Footer |  List  | Paragraph | Reference | Section | Table | Title |  Total  |
@@ -51,19 +56,24 @@ The DocBank dataset consists of 500K document pages with 12 types of semantic un
 |     DocBank     | 500,000 |   12   |       ✔      |      ✔      |       ✔       |      ✔      |
 
 ## Baseline
-As the dataset was fully annotated at token-level, we consider the document layout analysis task as a text-based sequence labeling task. 
+由于数据集在标记级别得到了完全注释，因此我们将文档布局分析任务视为基于文本的序列标记任务
 
-Under this setting, we evaluate three representative pre-trained language models on our dataset including BERT, RoBERTa and LayoutLM to validate the effectiveness of DocBank.
+在此设置下，我们评估了数据集上的三个代表性的预训练语言模型，包括BERT，RoBERTa和LayoutLM，以验证DocBank的有效性。
 
 ### Metrics
-As the inputs of our model are serialized 2-D documents, the typical BIO-tagging evaluation is not suitable for our task. The tokens of each semantic unit may discontinuously distribute in the input sequence.
+于我们模型的输入是序列化的2-D文档，因此典型的BIO标签评估不适合我们的任务。每个语义单元的令牌可以在输入序列中不连续地分布。
 
-In this case, we proposed a new metric, especially for text-based document layout analysis methods. For each kind of document semantic structure, we calculated their metrics individually. The definition is as follows:
+在这种情况下，我们提出了一个新的指标，特别是针对基于文本的文档布局分析方法。对于每种文档语义结构，我们分别计算其度量。定义如下：
 
 <img src='Metrics.png' width=500>
 
 ### Settings
-Our baselines of BERT and RoBERTa are built upon the HuggingFace's Transformers while the LayoutLM baselines are implemented with the codebase in [LayoutLM's official repository](https://aka.ms/layoutlm). We used 8 V100 GPUs with a batch size of 10 per GPU. It takes 5 hours to fine-tune 1 epoch on the 400K document pages. We used the BERT and RoBERTa tokenizers to tokenize the training samples and optimized the model with AdamW. The initial learning rate of the optimizer is 5e-5. We split the data into a max block size of N=512.
+我们的BERT和RoBERTa基线是基于HuggingFace的Transformers，
+而LayoutLM基线是通过[LayoutLM的官方存储库]（https://aka.ms/layoutlm）中的代码库实现的。 
+我们使用了8个V100 GPU，每个GPU的批量大小为10。 
+训练400K文档页面上的1个epoch需要5个小时。 
+我们使用BERT和RoBERTa标记器对训练样本进行标记，并使用AdamW优化模型。 
+优化器的初始学习率为5e-5。 我们将数据分成最大块大小N = 512。
 
 ### Results
 
@@ -86,15 +96,19 @@ Our baselines of BERT and RoBERTa are built upon the HuggingFace's Transformers 
 
 
 
-We evaluate six models on the test set of DocBank. We notice that the LayoutLM gets the highest scores on the \{abstract, author, caption, equation, figure, footer, list, paragraph, section, table, title\} labels. The RoBERTa model gets the best performance on the "reference" label but the gap with the LayoutLM is very small. This indicates that the LayoutLM architecture is significantly better than the BERT and RoBERTa architecture in the document layout analysis task. 
+我们在DocBank的测试集上评估了六个模型。我们注意到LayoutLM在{摘要，作者，标题，方程式，图形，页脚，列表，段落，节，表，标题}标签上得分最高。 
+RoBERTa模型在“reference”标签上获得最佳性能，但与LayoutLM的差距很小。
+这表明在文档布局分析任务中，LayoutLM体系结构明显优于BERT和RoBERTa体系结构。
+
 ## License
 DocBank is released under the [Attribution-NonCommercial-NoDerivs License](https://creativecommons.org/licenses/by-nc-nd/4.0/). You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may not use the material for commercial purposes. If you remix, transform, or build upon the material, you may not distribute the modified material.
 
 ## **Model Zoo and Scripts**
 
-The trained models are available for download in the [DocBank Model Zoo](MODEL_ZOO.md).
+训练好的模型下载连接 [DocBank Model Zoo](MODEL_ZOO.md).
 
-We provide a script to convert PDF files to the DocBank format data. You can run the PDF processing script pdf_process.py in the scripts directory. You may need to install some dependencies of this script through the pip package installer.
+我们提供了一个脚本，可将PDF文件转换为DocBank格式的数据。
+您可以在脚本目录中运行PDF处理脚本pdf_process.py。您可能需要通过pip软件包安装程序安装此脚本的某些依赖项。
 
 ~~~bash
 cd scripts
@@ -108,13 +122,12 @@ python pdf_process.py   --data_dir /path/to/pdf/directory \
 
 If you use the corpus in published work, please cite it referring to the "Paper and Citation" Section.
 
-We provide [100 samples](DocBank_samples/README.md) for previewing as well as the index files of training, validation, and test sets in the `indexed_files` directory.
+我们提供了[100 samples](DocBank_samples/README.md)进行预览，以及在indexed_files目录中提供了训练，验证和测试集的索引文件。
 
 <!-- Please fill this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRw1hSTX2waZIoerSk1J6CyNUQjA3QlBVUDYxMTY4NFpVR1UxNVRRU0ZIUS4u). If the review is approved, the download link will be sent to your email address. 
 
 The link will be reviewed and sent **the next Monday after the application** -->
 The annotations and original document pictures of the DocBank dataset **can be download from the [DocBank dataset homepage](https://doc-analysis.github.io/docbank-page/index.html)**.
-
 
 
 ## **Paper and Citation**
